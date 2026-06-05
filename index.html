@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#1a0a2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Recibí un versículo bíblico con promesa cada día" />
+  <title>Palabra Diaria</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #1a0a2e;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app {
+      background: linear-gradient(160deg, #1a0a2e 0%, #0d1b3e 50%, #0a2a1a 100%);
+      min-height: 100dvh;
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      flex-direction: column;
+      color: #f0ebe0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; max-width: 430px; }
+    .star {
+      position: absolute; width: 2px; height: 2px;
+      background: #fff; border-radius: 50%; opacity: 0;
+      animation: twinkle 3s infinite;
+    }
+    @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:0.7} }
+
+    .top-bar {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 52px 20px 8px;
+    }
+    .app-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 600;
+      color: #f5d78a; letter-spacing: 0.5px;
+    }
+    .date-pill {
+      font-size: 11px; color: #a89fc0;
+      background: rgba(255,255,255,0.07);
+      padding: 4px 10px; border-radius: 20px;
+      border: 0.5px solid rgba(255,255,255,0.12);
+    }
+
+    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen.active { display: flex; }
+
+    /* INICIO */
+    .verse-card {
+      position: relative; z-index: 2;
+      margin: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(245,215,138,0.3);
+      border-radius: 20px;
+      padding: 22px 20px;
+      flex: 1;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .promise-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #f5d78a;
+      background: rgba(245,215,138,0.12);
+      border: 0.5px solid rgba(245,215,138,0.35);
+      border-radius: 20px; padding: 4px 12px; width: fit-content;
+    }
+    .verse-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 500; font-style: italic;
+      line-height: 1.55; color: #f0ebe0;
+      transition: opacity 0.4s;
+    }
+    .verse-ref { font-size: 13px; color: #a89fc0; font-weight: 300; }
+    .divider { height: 0.5px; background: rgba(255,255,255,0.1); }
+    .promise-box {
+      background: rgba(245,215,138,0.07);
+      border-left: 2px solid #f5d78a;
+      border-radius: 0 10px 10px 0;
+      padding: 10px 14px;
+    }
+    .promise-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #f5d78a; margin-bottom: 5px;
+    }
+    .promise-text { font-size: 14px; color: #d4cfc0; line-height: 1.5; }
+
+    .actions {
+      position: relative; z-index: 2;
+      display: flex; gap: 10px; padding: 0 16px 8px;
+    }
+    .btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 13px 8px; border-radius: 14px;
+      border: 0.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: #e0dbd0; font-size: 13px;
+      font-family: 'Lato', sans-serif; cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn.primary {
+      background: rgba(245,215,138,0.15);
+      border-color: rgba(245,215,138,0.45);
+      color: #f5d78a; font-weight: 700;
+    }
+
+    /* IMAGEN */
+    .canvas-wrap {
+      position: relative; z-index: 2;
+      margin: 8px 16px; flex: 1;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .section-label {
+      font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase;
+      color: #a89fc0; font-weight: 700;
+    }
+    canvas#imgCanvas {
+      width: 100%; border-radius: 12px; display: block;
+      border: 0.5px solid rgba(255,255,255,0.12);
+    }
+    .bg-picker { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .bg-swatch {
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s;
+    }
+    .bg-swatch.active { border-color: #f5d78a; transform: scale(1.15); }
+    .share-row { display: flex; gap: 10px; }
+    .share-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px; border-radius: 12px;
+      border: 0.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: #e0dbd0; font-size: 13px; cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: background 0.2s;
+    }
+
+    /* HISTORIAL */
+    .hist-wrap { position: relative; z-index: 2; padding: 8px 16px; flex: 1; overflow-y: auto; }
+    .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .hist-title { font-size: 16px; font-weight: 500; color: #f0ebe0; }
+    .hist-sub { font-size: 12px; color: #a89fc0; }
+    .day-card {
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
+    }
+    .day-row { display: flex; align-items: center; gap: 10px; }
+    .day-dot {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .day-meta { flex: 1; }
+    .day-name { font-size: 13px; font-weight: 700; color: #f0ebe0; }
+    .day-ref { font-size: 12px; color: #a89fc0; margin-top: 1px; }
+    .day-chevron { font-size: 18px; color: #a89fc0; transition: transform 0.25s; }
+    .day-card.open .day-chevron { transform: rotate(180deg); }
+    .day-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .day-card.open .day-body { max-height: 300px; padding-top: 12px; }
+    .day-verse {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-style: italic; line-height: 1.6;
+      color: #f0ebe0; border-left: 2px solid rgba(245,215,138,0.5);
+      padding-left: 12px; margin-bottom: 10px;
+    }
+    .day-promise-tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #a89fc0; margin-bottom: 5px; }
+    .day-promise { font-size: 13px; color: #d4cfc0; line-height: 1.55; }
+
+    /* BUSCAR */
+    .search-wrap { position: relative; z-index: 2; padding: 8px 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .search-box {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      border-radius: 12px; padding: 10px 14px;
+    }
+    .search-box input {
+      background: none; border: none; outline: none;
+      color: #f0ebe0; font-size: 15px; font-family: 'Lato', sans-serif;
+      flex: 1;
+    }
+    .search-box input::placeholder { color: #a89fc0; }
+    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 6px 14px; border-radius: 20px; font-size: 12px;
+      border: 0.5px solid rgba(245,215,138,0.3);
+      background: rgba(245,215,138,0.08); color: #f5d78a;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .chip:hover { background: rgba(245,215,138,0.18); }
+    .result-card {
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 16px;
+    }
+    .result-verse {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-style: italic; line-height: 1.55;
+      color: #f0ebe0; margin-bottom: 8px;
+    }
+    .result-ref { font-size: 12px; color: #a89fc0; }
+
+    /* NAV */
+    .nav-bar {
+      position: relative; z-index: 2;
+      display: flex; border-top: 0.5px solid rgba(255,255,255,0.1);
+      padding: 10px 0 20px; background: rgba(26,10,46,0.95);
+      position: sticky; bottom: 0;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; opacity: 0.45; transition: opacity 0.2s;
+      font-size: 10px; color: #a89fc0; letter-spacing: 0.3px;
+    }
+    .nav-item.active { opacity: 1; color: #f5d78a; }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; }
+
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: rgba(245,215,138,0.95); color: #1a0a2e;
+      font-size: 13px; font-weight: 700; padding: 9px 22px;
+      border-radius: 20px; opacity: 0; transition: opacity 0.3s;
+      z-index: 100; pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="stars" id="stars"></div>
+
+  <div class="top-bar">
+    <span class="app-title">✦ Palabra Diaria</span>
+    <span class="date-pill" id="todayDate"></span>
+  </div>
+
+  <!-- PANTALLA INICIO -->
+  <div class="screen active" id="screen-home">
+    <div class="verse-card">
+      <span class="promise-tag">✦ Promesa de hoy</span>
+      <p class="verse-text" id="verseText"></p>
+      <span class="verse-ref" id="verseRef"></span>
+      <div class="divider"></div>
+      <div class="promise-box">
+        <div class="promise-label">Promesa</div>
+        <p class="promise-text" id="promiseText"></p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="loadNewVerse()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>
+        Nuevo
+      </button>
+      <button class="btn primary" onclick="goTo('image')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Crear imagen
+      </button>
+    </div>
+  </div>
+
+  <!-- PANTALLA IMAGEN -->
+  <div class="screen" id="screen-image">
+    <div class="canvas-wrap">
+      <span class="section-label">Tu imagen</span>
+      <canvas id="imgCanvas" width="380" height="220"></canvas>
+      <span class="section-label">Fondo</span>
+      <div class="bg-picker" id="bgPicker"></div>
+      <div class="share-row">
+        <button class="share-btn" onclick="downloadImage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar
+        </button>
+        <button class="share-btn" onclick="shareImage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Compartir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA HISTORIAL -->
+  <div class="screen" id="screen-history">
+    <div class="hist-wrap">
+      <div class="hist-header">
+        <span class="hist-title">Semana pasada</span>
+        <span class="hist-sub">26 may — 1 jun</span>
+      </div>
+      <div id="dayList"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA BUSCAR -->
+  <div class="screen" id="screen-search">
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a89fc0" style="width:18px;height:18px;flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" placeholder="Buscar por tema..." oninput="doSearch()" />
+      </div>
+      <div class="chip-row">
+        <span class="chip" onclick="searchTopic('paz')">Paz</span>
+        <span class="chip" onclick="searchTopic('fe')">Fe</span>
+        <span class="chip" onclick="searchTopic('amor')">Amor</span>
+        <span class="chip" onclick="searchTopic('fortaleza')">Fortaleza</span>
+        <span class="chip" onclick="searchTopic('esperanza')">Esperanza</span>
+        <span class="chip" onclick="searchTopic('alegría')">Alegría</span>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-item active" id="nav-home" onclick="goTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Inicio
+    </div>
+    <div class="nav-item" id="nav-history" onclick="goTo('history')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Historial
+    </div>
+    <div class="nav-item" id="nav-search" onclick="goTo('search')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Buscar
+    </div>
+    <div class="nav-item" id="nav-image" onclick="goTo('image')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Imagen
+    </div>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const verses = [
+  { text: '"Todo lo puedo en Cristo que me fortalece."', ref: '— Filipenses 4:13', promise: 'Dios te da fuerzas para enfrentar cualquier situación. No importa lo difícil que parezca el camino, Su poder actúa en ti.', topics: ['fortaleza','fe'] },
+  { text: '"Porque yo sé los planes que tengo para ustedes, planes de bienestar y no de calamidad, para darles un futuro y una esperanza."', ref: '— Jeremías 29:11', promise: 'El Señor tiene propósitos de bien para tu vida. Tu futuro está en Sus manos y está lleno de esperanza.', topics: ['esperanza','fe'] },
+  { text: '"El Señor es mi pastor; nada me faltará."', ref: '— Salmos 23:1', promise: 'Dios provee todo lo que necesitas. Como buen pastor, cuida cada detalle de tu vida con amor.', topics: ['paz','amor'] },
+  { text: '"Echa sobre el Señor tu carga, y Él te sustentará."', ref: '— Salmos 55:22', promise: 'No tienes que cargar solo tus preocupaciones. Dios te invita a entregárselas y encontrar descanso en Él.', topics: ['paz','fe'] },
+  { text: '"Mas buscad primeramente el reino de Dios y su justicia, y todas estas cosas os serán añadidas."', ref: '— Mateo 6:33', promise: 'Cuando pones a Dios primero, Él se encarga de suplir todas tus necesidades de manera abundante.', topics: ['fe','esperanza'] },
+  { text: '"No temas, porque yo estoy contigo; no te angusties, porque yo soy tu Dios. Te fortaleceré."', ref: '— Isaías 41:10', promise: 'No estás sola. La presencia de Dios es tu fortaleza y tu refugio en todo momento de temor.', topics: ['fortaleza','paz'] },
+  { text: '"El amor es sufrido, es benigno; el amor no tiene envidia, no se jacta, no se envanece."', ref: '— 1 Corintios 13:4', promise: 'El amor verdadero de Dios es perfecto y paciente. Ese mismo amor vive en ti y puede fluir hacia los demás.', topics: ['amor'] },
+  { text: '"Deléitate en el Señor, y Él te concederá los deseos de tu corazón."', ref: '— Salmos 37:4', promise: 'Cuando tu alegría está en Dios, tus deseos se alinean con los Suyos y Él los cumple con abundancia.', topics: ['alegría','fe'] },
+  { text: '"Bendito el hombre que confía en el Señor, y cuya confianza es el Señor."', ref: '— Jeremías 17:7', promise: 'La confianza en Dios no defrauda. Quien pone su fe en Él encuentra estabilidad que el mundo no puede dar.', topics: ['fe','esperanza'] },
+  { text: '"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito."', ref: '— Juan 3:16', promise: 'El amor de Dios por vos es tan inmenso que entregó lo más valioso. Ese amor no tiene condiciones ni límites.', topics: ['amor','fe'] },
+];
+
+const historyData = [
+  { name: 'Lunes', date: '26 may', ref: 'Josué 1:9', dot: '#3C3489', dotText: '#CECBF6', verse: '"Sé fuerte y valiente. No te atemorices ni te desanimes, porque el Señor tu Dios estará contigo dondequiera que vayas."', promise: 'Dios camina contigo en cada paso. Su presencia es tu fortaleza cuando el miedo quiere detenerte.' },
+  { name: 'Martes', date: '27 may', ref: 'Romanos 8:28', dot: '#085041', dotText: '#9FE1CB', verse: '"Ahora bien, sabemos que Dios dispone todas las cosas para el bien de quienes lo aman."', promise: 'Nada en tu vida es desperdiciado. Hasta lo difícil tiene un propósito en las manos de Dios.' },
+  { name: 'Miércoles', date: '28 may', ref: 'Isaías 40:31', dot: '#0C447C', dotText: '#B5D4F4', verse: '"Los que confían en el Señor renovarán sus fuerzas; volarán como las águilas."', promise: 'Cuando te sentís agotada, esperar en Dios renueva energías que ningún descanso humano puede dar.' },
+  { name: 'Jueves', date: '29 may', ref: 'Salmos 46:1', dot: '#633806', dotText: '#FAC775', verse: '"Dios es nuestro amparo y nuestra fortaleza, nuestra ayuda segura en momentos de angustia."', promise: 'En cada crisis y tormenta, Dios es el refugio que no falla. Podés correr a Él en cualquier momento.' },
+  { name: 'Viernes', date: '30 may', ref: 'Juan 16:33', dot: '#712B13', dotText: '#F5C4B3', verse: '"En el mundo tendrán aflicción; pero confíen, yo he vencido al mundo."', promise: 'Las dificultades son reales, pero la victoria de Cristo es mayor. Hay paz disponible incluso en la tormenta.' },
+  { name: 'Sábado', date: '31 may', ref: 'Proverbios 3:5-6', dot: '#27500A', dotText: '#C0DD97', verse: '"Confía en el Señor de todo corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y Él enderezará tus veredas."', promise: 'Soltar el control y confiar en Dios no es debilidad — es la decisión más sabia que podés tomar.' },
+  { name: 'Domingo', date: '1 jun', ref: 'Lamentaciones 3:22-23', dot: '#72243E', dotText: '#F4C0D1', verse: '"El gran amor del Señor nunca se acaba, y su compasión jamás se agota. Cada mañana se renuevan sus bondades."', promise: 'Cada amanecer es un regalo fresco de la misericordia de Dios. Sus bondades llegan nuevas cada día.' },
+];
+
+const backgrounds = [
+  { colors: ['#1a0a2e','#0d1b3e','#0a2a1a'], label: 'Noche' },
+  { colors: ['#3d1c0a','#7a3520','#c87941'], label: 'Amanecer' },
+  { colors: ['#0a2a4a','#1b5a8a','#2e8bc0'], label: 'Cielo' },
+  { colors: ['#0a2a0a','#1a4a1a','#2d7a3a'], label: 'Bosque' },
+  { colors: ['#2a0a1a','#5a1a3a','#9a3a6a'], label: 'Rosa' },
+];
+
+let currentVerse = 0;
+let currentBg = 0;
+
+function todayVerseIndex() {
+  const d = new Date();
+  return (d.getFullYear() * 365 + d.getMonth() * 30 + d.getDate()) % verses.length;
+}
+
+function setDate() {
+  const d = new Date();
+  document.getElementById('todayDate').textContent = d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
+}
+
+function renderVerse() {
+  const v = verses[currentVerse];
+  document.getElementById('verseText').textContent = v.text;
+  document.getElementById('verseRef').textContent = v.ref;
+  document.getElementById('promiseText').textContent = v.promise;
+}
+
+function loadNewVerse() {
+  currentVerse = (currentVerse + 1) % verses.length;
+  const vt = document.getElementById('verseText');
+  vt.style.opacity = '0';
+  setTimeout(() => { renderVerse(); vt.style.transition = 'opacity 0.5s'; vt.style.opacity = '1'; }, 200);
+}
+
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  const navEl = document.getElementById('nav-' + screen);
+  if (navEl) navEl.classList.add('active');
+  if (screen === 'image') generateImage();
+}
+
+function buildBgPicker() {
+  const picker = document.getElementById('bgPicker');
+  backgrounds.forEach((bg, i) => {
+    const sw = document.createElement('div');
+    sw.className = 'bg-swatch' + (i === 0 ? ' active' : '');
+    sw.style.background = `linear-gradient(135deg, ${bg.colors[0]}, ${bg.colors[2]})`;
+    sw.title = bg.label;
+    sw.onclick = () => {
+      document.querySelectorAll('.bg-swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      currentBg = i;
+      generateImage();
+    };
+    picker.appendChild(sw);
+  });
+}
+
+function generateImage() {
+  const canvas = document.getElementById('imgCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const bg = backgrounds[currentBg];
+  const v = verses[currentVerse];
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, bg.colors[0]);
+  grad.addColorStop(0.5, bg.colors[1]);
+  grad.addColorStop(1, bg.colors[2]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(255,255,255,0.025)';
+  for (let i = 0; i < 30; i++) {
+    ctx.beginPath();
+    ctx.arc(Math.random()*W, Math.random()*H, Math.random()*1.5+0.5, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.strokeStyle = 'rgba(245,215,138,0.25)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(10, 10, W-20, H-20);
+  ctx.fillStyle = 'rgba(245,215,138,0.85)';
+  ctx.font = 'bold 10px Lato, sans-serif';
+  ctx.fillText('✦ PALABRA DIARIA', 22, 30);
+  ctx.fillStyle = 'rgba(240,235,224,0.9)';
+  ctx.font = 'italic 14px Georgia, serif';
+  const raw = v.text.replace(/^"|"$/g, '');
+  const words = raw.split(' ');
+  let line = '', lines = [];
+  const maxW = W - 44;
+  for (const w of words) {
+    const t = line + (line ? ' ' : '') + w;
+    if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; }
+    else line = t;
+  }
+  if (line) lines.push(line);
+  const totalH = lines.length * 22;
+  const startY = (H - totalH - 24) / 2 + 14;
+  lines.forEach((l, i) => ctx.fillText(l, 22, startY + i * 22));
+  ctx.fillStyle = 'rgba(168,159,192,0.8)';
+  ctx.font = '10px Lato, sans-serif';
+  ctx.fillText(v.ref, 22, H - 14);
+}
+
+function downloadImage() {
+  const canvas = document.getElementById('imgCanvas');
+  const link = document.createElement('a');
+  link.download = 'versiculo-del-dia.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Imagen guardada ✓');
+}
+
+async function shareImage() {
+  const canvas = document.getElementById('imgCanvas');
+  if (navigator.share) {
+    canvas.toBlob(async blob => {
+      const file = new File([blob], 'versiculo.png', { type: 'image/png' });
+      try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Versículo del día', text: verses[currentVerse].text });
+        } else {
+          await navigator.share({ title: 'Versículo del día', text: verses[currentVerse].text });
+        }
+      } catch(e) { downloadImage(); }
+    });
+  } else { downloadImage(); }
+}
+
+function buildHistory() {
+  const list = document.getElementById('dayList');
+  historyData.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'day-card';
+    card.innerHTML = `
+      <div class="day-row">
+        <div class="day-dot" style="background:${d.dot};color:${d.dotText}">${d.date.split(' ')[0]}</div>
+        <div class="day-meta">
+          <div class="day-name">${d.name} <span style="font-weight:300;color:#a89fc0;font-size:11px">${d.date}</span></div>
+          <div class="day-ref">${d.ref}</div>
+        </div>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="day-body">
+        <p class="day-verse">${d.verse}</p>
+        <div class="day-promise-tag">Promesa</div>
+        <p class="day-promise">${d.promise}</p>
+      </div>`;
+    card.onclick = () => {
+      const open = card.classList.contains('open');
+      document.querySelectorAll('.day-card').forEach(c => c.classList.remove('open'));
+      if (!open) card.classList.add('open');
+    };
+    list.appendChild(card);
+  });
+}
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (q.length < 2) { document.getElementById('searchResults').innerHTML = ''; return; }
+  searchTopic(q);
+}
+
+function searchTopic(topic) {
+  document.getElementById('searchInput').value = topic;
+  const results = verses.filter(v =>
+    v.topics.some(t => t.includes(topic)) ||
+    v.text.toLowerCase().includes(topic) ||
+    v.promise.toLowerCase().includes(topic)
+  );
+  const container = document.getElementById('searchResults');
+  if (results.length === 0) {
+    container.innerHTML = '<p style="color:#a89fc0;font-size:14px;text-align:center;padding:20px">No encontré versículos sobre ese tema.</p>';
+    return;
+  }
+  container.innerHTML = results.map(v => `
+    <div class="result-card">
+      <p class="result-verse">${v.text}</p>
+      <p class="result-ref">${v.ref}</p>
+    </div>`).join('');
+}
+
+function buildStars() {
+  const s = document.getElementById('stars');
+  for (let i = 0; i < 40; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;
+    s.appendChild(star);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+buildStars();
+setDate();
+currentVerse = todayVerseIndex();
+renderVerse();
+buildBgPicker();
+buildHistory();
+</script>
+</body>
+</html>
