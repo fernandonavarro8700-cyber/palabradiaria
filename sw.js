@@ -1,25 +1,5 @@
-const CACHE = 'palabra-diaria-v1';
-const ASSETS = [
-  '/palabradiaria/',
-  '/palabradiaria/index.html',
-  '/palabradiaria/manifest.json',
-  '/palabradiaria/icon-192.png',
-  '/palabradiaria/icon-512.png'
-];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(ASSETS))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
-});
-
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
-  );
-});
+const CACHE = 'pd-v3';
+const ASSETS = ['/palabradiaria/', '/palabradiaria/index.html', '/palabradiaria/manifest.json'];
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k!==CACHE).map(k => caches.delete(k))))); clients.claim(); });
+self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
