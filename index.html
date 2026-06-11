@@ -3,247 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#12102a">
+<meta name="theme-color" content="#0e0b1f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Palabra Diaria</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#12102a;color:#f0edf8;min-height:100vh}
-body.light{background:#f0ecff;color:#1a1230}
-.wrap{max-width:430px;margin:0 auto;padding-bottom:80px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:#0e0b1f;color:#f0edf8;min-height:100vh}
+body.light{background:#f4f0ff;color:#1a1230}
+.app{max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:82px}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:50px 18px 14px}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-box{width:30px;height:30px;background:linear-gradient(135deg,#7c5cbf,#a67de8);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.logo-name{font-size:17px;font-weight:700}
-.date{font-size:11px;color:#a89fc8;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:4px 12px;border-radius:20px}
-body.light .date{color:#7c5cbf;background:rgba(124,92,191,0.08);border-color:rgba(124,92,191,0.2)}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#6c48b0,#9b6de0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-name{font-size:18px;font-weight:700}
+.datebadge{font-size:11px;color:#a89fc8;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:5px 13px;border-radius:20px}
+body.light .datebadge{color:#6c48b0;background:rgba(108,72,176,0.08);border-color:rgba(108,72,176,0.2)}
 .screen{display:none;flex-direction:column;gap:14px;padding:0 16px}
 .screen.active{display:flex}
-.card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px}
-body.light .card{background:rgba(255,255,255,0.85);border-color:rgba(124,92,191,0.15)}
-.card-v{background:rgba(124,92,191,0.12);border-color:rgba(124,92,191,0.35)}
-.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c9a6f5;background:rgba(124,92,191,0.15);border:1px solid rgba(124,92,191,0.3);border-radius:20px;padding:4px 13px;margin-bottom:12px}
-.vtext{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;line-height:1.6;margin-bottom:8px}
+.stitle{font-size:20px;font-weight:700}
+.card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:18px}
+body.light .card{background:rgba(255,255,255,0.85);border-color:rgba(108,72,176,0.13)}
+.card-hero{background:linear-gradient(140deg,rgba(108,72,176,0.22),rgba(155,109,224,0.1));border-color:rgba(108,72,176,0.4)}
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c4a0f0;background:rgba(108,72,176,0.15);border:1px solid rgba(108,72,176,0.3);border-radius:20px;padding:4px 13px;margin-bottom:13px}
+.vtext{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;line-height:1.62;margin-bottom:8px}
 .vref{font-size:12px;color:#a89fc8;font-weight:500}
-body.light .vref{color:#7c5cbf}
-.divider{height:1px;background:rgba(255,255,255,0.08);margin:14px 0}
-body.light .divider{background:rgba(124,92,191,0.12)}
-.plabel{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#a67de8;margin-bottom:5px}
-.ptext{font-size:13px;color:#a89fc8;line-height:1.6}
+body.light .vref{color:#6c48b0}
+.hdiv{height:1px;background:rgba(255,255,255,0.08);margin:13px 0}
+body.light .hdiv{background:rgba(108,72,176,0.1)}
+.plabel{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9b6de0;margin-bottom:5px}
+.ptext{font-size:13px;color:#a89fc8;line-height:1.65}
 body.light .ptext{color:#4a3d6b}
-.progrow{display:flex;align-items:center;gap:10px}
-.progbar{flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
-body.light .progbar{background:rgba(124,92,191,0.15)}
-.progfill{height:100%;background:linear-gradient(90deg,#7c5cbf,#a67de8);border-radius:4px}
-.proglabel{font-size:11px;color:#6b6285;white-space:nowrap}
 .btnrow{display:flex;gap:10px}
-.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;border-radius:13px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);color:#a89fc8;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer}
-body.light .btn{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.2);color:#4a3d6b}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;border-radius:13px;border:1px solid rgba(255,255,255,0.11);background:rgba(255,255,255,0.06);color:#a89fc8;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer}
+body.light .btn{background:rgba(255,255,255,0.8);border-color:rgba(108,72,176,0.18);color:#4a3d6b}
 .btn:active{opacity:0.7}
-.btnp{background:linear-gradient(135deg,#7c5cbf,#a67de8);border-color:transparent;color:#fff;font-weight:600}
-.btnp:active{opacity:0.85}
-.slabel{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#6b6285;margin-bottom:10px}
-#imgCanvas{width:100%;border-radius:13px;display:block;border:1px solid rgba(255,255,255,0.1)}
+.btnp{background:linear-gradient(135deg,#6c48b0,#9b6de0);border-color:transparent;color:#fff;font-weight:600}
+.btnfav{background:rgba(255,180,0,0.08);border-color:rgba(255,180,0,0.25);color:#ffc84a}
+.btnfav.on{background:rgba(255,180,0,0.18);border-color:rgba(255,180,0,0.5)}
+.slabel{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b6285;margin-bottom:10px}
+#imgCanvas{width:100%;border-radius:13px;display:block;border:1px solid rgba(255,255,255,0.09)}
 .bggrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .bgsw{aspect-ratio:1;border-radius:9px;cursor:pointer;border:2px solid transparent}
-.bgsw:active{opacity:0.7}
-.bgsw.on{border-color:#a67de8}
+.bgsw.on{border-color:#9b6de0}
 .fontrow{display:flex;gap:8px;flex-wrap:wrap}
-.fchip{padding:6px 13px;border-radius:9px;font-size:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:#a89fc8;cursor:pointer}
-body.light .fchip{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.15);color:#4a3d6b}
-.fchip:active{opacity:0.7}
-.fchip.on{background:rgba(124,92,191,0.2);border-color:#7c5cbf;color:#c9a6f5}
+.fchip{padding:6px 13px;border-radius:9px;font-size:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#a89fc8;cursor:pointer}
+body.light .fchip{background:rgba(255,255,255,0.8);border-color:rgba(108,72,176,0.15);color:#4a3d6b}
+.fchip.on{background:rgba(108,72,176,0.2);border-color:#6c48b0;color:#c4a0f0}
 .sizerow{display:flex;align-items:center;gap:10px}
-.szb{width:35px;height:35px;border-radius:9px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);color:#f0edf8;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
-body.light .szb{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.2);color:#1a1230}
-.szb:active{opacity:0.7}
-.szval{font-size:16px;font-weight:700;min-width:26px;text-align:center}
-.histhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.histtitle{font-size:18px;font-weight:700}
-.histsub{font-size:12px;color:#6b6285}
-.dcard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:13px;overflow:hidden;cursor:pointer;margin-bottom:8px}
-body.light .dcard{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.12)}
-.drow{display:flex;align-items:center;gap:11px;padding:13px 15px}
-.dnum{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#7c5cbf,#a67de8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.dname{font-size:13px;font-weight:600}
-.dref{font-size:11px;color:#a89fc8;margin-top:2px}
-body.light .dref{color:#7c5cbf}
-.chev{width:17px;height:17px;color:#6b6285;margin-left:auto;flex-shrink:0;transition:transform 0.25s}
-.dcard.open .chev{transform:rotate(180deg)}
-.dbody{display:none;padding:0 15px 14px;border-top:1px solid rgba(255,255,255,0.07)}
-body.light .dbody{border-color:rgba(124,92,191,0.1)}
-.dcard.open .dbody{display:block}
-.dverse{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.6;border-left:2px solid #7c5cbf;padding:10px 0 8px 12px;margin-top:12px}
-.dplabel{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#a67de8;margin:8px 0 4px}
-.dppromise{font-size:13px;color:#a89fc8;line-height:1.55}
-body.light .dppromise{color:#4a3d6b}
-.sbox{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:13px;padding:12px 15px}
-body.light .sbox{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.2)}
+.szb{width:35px;height:35px;border-radius:9px;border:1px solid rgba(255,255,255,0.11);background:rgba(255,255,255,0.06);color:#f0edf8;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
+body.light .szb{background:rgba(255,255,255,0.8);border-color:rgba(108,72,176,0.18);color:#1a1230}
+.listhdr{display:flex;justify-content:space-between;align-items:center}
+.listtitle{font-size:20px;font-weight:700}
+.listsub{font-size:12px;color:#6b6285}
+.vcard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;margin-bottom:8px;overflow:hidden}
+body.light .vcard{background:rgba(255,255,255,0.82);border-color:rgba(108,72,176,0.12)}
+.vchead{display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer}
+.vcnum{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6c48b0,#9b6de0);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.vcname{font-size:13px;font-weight:600}
+.vcref2{font-size:11px;color:#a89fc8;margin-top:2px}
+body.light .vcref2{color:#6c48b0}
+.vcfavbtn{font-size:18px;margin-left:auto;flex-shrink:0;cursor:pointer;padding:2px 6px;background:none;border:none;color:#ffc84a}
+.chev{width:17px;height:17px;color:#6b6285;flex-shrink:0;transition:transform 0.25s}
+.vcard.open .chev{transform:rotate(180deg)}
+.vcbody{display:none;padding:0 15px 14px;border-top:1px solid rgba(255,255,255,0.07)}
+body.light .vcbody{border-color:rgba(108,72,176,0.09)}
+.vcard.open .vcbody{display:block}
+.vcverse{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.6;border-left:2px solid #6c48b0;padding:10px 0 8px 12px;margin-top:12px}
+.vcplabel{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b6de0;margin:8px 0 4px}
+.vcptext{font-size:13px;color:#a89fc8;line-height:1.55}
+body.light .vcptext{color:#4a3d6b}
+.empty{text-align:center;padding:40px 20px;color:#6b6285;font-size:14px;line-height:1.7}
+.sbox{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:13px;padding:12px 15px}
+body.light .sbox{background:rgba(255,255,255,0.8);border-color:rgba(108,72,176,0.18)}
 .sbox input{background:none;border:none;outline:none;color:#f0edf8;font-size:15px;font-family:'Inter',sans-serif;flex:1}
 body.light .sbox input{color:#1a1230}
 .sbox input::placeholder{color:#6b6285}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid rgba(124,92,191,0.3);background:rgba(124,92,191,0.1);color:#c9a6f5;cursor:pointer}
-.chip:active{opacity:0.7}
-.rcard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:13px;padding:15px;margin-bottom:8px}
-body.light .rcard{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.12)}
-.rverse{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;line-height:1.55;margin-bottom:6px}
-.rref{font-size:11px;color:#a89fc8}
-body.light .rref{color:#7c5cbf}
-.sglabel{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#6b6285;padding:0 2px;margin-bottom:8px}
-.srow{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);padding:13px 15px;margin-bottom:2px;cursor:pointer}
-body.light .srow{background:rgba(255,255,255,0.8);border-color:rgba(124,92,191,0.12)}
+.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid rgba(108,72,176,0.3);background:rgba(108,72,176,0.1);color:#c4a0f0;cursor:pointer}
+.sglabel{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b6285;margin-bottom:8px;margin-top:4px}
+.srow{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);padding:13px 15px;margin-bottom:2px;cursor:pointer;border-radius:4px}
+body.light .srow{background:rgba(255,255,255,0.82);border-color:rgba(108,72,176,0.12)}
 .srow:first-of-type{border-radius:13px 13px 4px 4px}
 .srow:last-of-type{border-radius:4px 4px 13px 13px}
 .srow:only-of-type{border-radius:13px}
 .sleft{display:flex;align-items:center;gap:11px}
-.sicon{width:34px;height:34px;border-radius:9px;background:rgba(124,92,191,0.15);display:flex;align-items:center;justify-content:center;font-size:17px}
+.sicon{width:34px;height:34px;border-radius:9px;background:rgba(108,72,176,0.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
 .sname{font-size:14px;font-weight:500}
 .sval{font-size:12px;color:#6b6285;margin-top:1px}
 .tog{width:44px;height:26px;background:rgba(255,255,255,0.15);border-radius:13px;position:relative;cursor:pointer;transition:background 0.3s;flex-shrink:0}
-.tog.on{background:#7c5cbf}
+.tog.on{background:#6c48b0}
 .togthumb{width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:transform 0.3s;box-shadow:0 2px 5px rgba(0,0,0,0.3)}
 .tog.on .togthumb{transform:translateX(18px)}
-.devcard{background:linear-gradient(135deg,rgba(124,92,191,0.15),rgba(166,125,232,0.08));border:1px solid rgba(124,92,191,0.3);border-radius:17px;padding:20px}
-.devav{width:54px;height:54px;background:linear-gradient(135deg,#7c5cbf,#a67de8);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:11px}
+.langrow{display:flex;gap:8px;flex-wrap:wrap}
+.langchip{padding:8px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#a89fc8;cursor:pointer;font-weight:500}
+body.light .langchip{background:rgba(255,255,255,0.8);border-color:rgba(108,72,176,0.15);color:#4a3d6b}
+.langchip.on{background:rgba(108,72,176,0.25);border-color:#6c48b0;color:#c4a0f0;font-weight:700}
+.devcard{background:linear-gradient(135deg,rgba(108,72,176,0.15),rgba(155,109,224,0.07));border:1px solid rgba(108,72,176,0.3);border-radius:17px;padding:20px}
+.devav{width:54px;height:54px;background:linear-gradient(135deg,#6c48b0,#9b6de0);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:11px}
 .devname{font-size:17px;font-weight:700}
-.devrole{font-size:12px;color:#a67de8;margin-top:3px}
+.devrole{font-size:12px;color:#9b6de0;margin-top:3px}
 .devemail{font-size:13px;color:#a89fc8;margin-top:9px}
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;display:flex;background:#16112a;border-top:1px solid rgba(255,255,255,0.08);padding:7px 0 18px;z-index:9999}
-body.light .nav{background:#ece6ff;border-color:rgba(124,92,191,0.15)}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;display:flex;background:#13102a;border-top:1px solid rgba(255,255,255,0.08);padding:7px 0 18px;z-index:9999}
+body.light .nav{background:#ede8ff;border-color:rgba(108,72,176,0.15)}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.38;font-size:10px;color:#a89fc8;font-weight:500;padding:3px 0}
-.ni.on{opacity:1;color:#a67de8}
+.ni.on{opacity:1;color:#9b6de0}
 .ni svg{width:22px;height:22px}
-.ndot{width:4px;height:4px;border-radius:50%;background:#a67de8;opacity:0}
+.ndot{width:4px;height:4px;border-radius:50%;background:#9b6de0;opacity:0}
 .ni.on .ndot{opacity:1}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#7c5cbf;color:#fff;font-size:13px;font-weight:600;padding:9px 22px;border-radius:20px;opacity:0;transition:opacity 0.3s;z-index:99999;pointer-events:none;white-space:nowrap}
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:#6c48b0;color:#fff;font-size:13px;font-weight:600;padding:9px 22px;border-radius:20px;opacity:0;transition:opacity 0.3s;z-index:99999;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1}
-.stitle{font-size:19px;font-weight:700;margin-bottom:4px}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
   <div class="topbar">
     <div class="logo">
-      <div class="logo-box">✦</div>
+      <div class="logo-icon">✦</div>
       <span class="logo-name">Palabra Diaria</span>
     </div>
-    <span class="date" id="fecha"></span>
+    <span class="datebadge" id="fecha"></span>
   </div>
 
   <div class="screen active" id="s-home">
-    <div class="progrow">
-      <div class="progbar"><div class="progfill" id="pf" style="width:0%"></div></div>
-      <span class="proglabel" id="pl">Día 1 de 365</span>
-    </div>
-    <div class="card card-v">
-      <span class="badge" id="badge">✦ Día 1 de 365</span>
-      <p class="vtext" id="vt"></p>
+    <div class="card card-hero">
+      <span class="badge" id="badge-txt">✦ Promesa del día</span>
+      <p class="vtext" id="vt">Cargando...</p>
       <p class="vref" id="vr"></p>
-      <div class="divider"></div>
-      <div class="plabel">Promesa</div>
+      <div class="hdiv"></div>
+      <div class="plabel" id="plabel-txt">Promesa</div>
       <p class="ptext" id="vp"></p>
     </div>
     <div class="btnrow">
+      <button class="btn btnfav" id="btnFav" onclick="toggleFav()">
+        <span id="favIcon">☆</span> <span id="lbl-fav">Favorito</span>
+      </button>
       <button class="btn" onclick="nextVerse()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>
-        Siguiente
+        <span id="lbl-sig">Siguiente</span>
       </button>
       <button class="btn btnp" onclick="ir('image')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        Crear imagen
+        <span id="lbl-img">Imagen</span>
       </button>
     </div>
   </div>
 
   <div class="screen" id="s-image">
-    <p class="stitle">Crear imagen</p>
+    <p class="stitle" id="lbl-img-title">Crear imagen</p>
     <canvas id="imgCanvas" width="400" height="240"></canvas>
     <div class="card">
-      <div class="slabel">Fondo</div>
+      <div class="slabel" id="lbl-bg">Fondo</div>
       <div class="bggrid" id="bgGrid"></div>
     </div>
     <div class="card">
-      <div class="slabel">Fuente</div>
+      <div class="slabel" id="lbl-font">Fuente</div>
       <div class="fontrow" id="fontRow"></div>
     </div>
     <div class="card">
-      <div class="slabel">Tamaño de letra</div>
+      <div class="slabel" id="lbl-size">Tamaño de letra</div>
       <div class="sizerow">
         <button class="szb" onclick="sz(-1)">−</button>
-        <span class="szval" id="szv">16</span>
+        <span id="szv" style="font-size:16px;font-weight:700;min-width:26px;text-align:center">16</span>
         <button class="szb" onclick="sz(1)">+</button>
         <span style="font-size:12px;color:#6b6285;margin-left:4px">px</span>
       </div>
     </div>
     <div class="btnrow">
-      <button class="btn" onclick="dlImg()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Descargar
-      </button>
-      <button class="btn btnp" onclick="shImg()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Compartir
-      </button>
+      <button class="btn" onclick="dlImg()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span id="lbl-dl">Descargar</span></button>
+      <button class="btn btnp" onclick="shImg()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> <span id="lbl-sh">Compartir</span></button>
     </div>
   </div>
 
   <div class="screen" id="s-history">
-    <div class="histhdr">
-      <span class="histtitle">Historial</span>
-      <span class="histsub" id="hsub"></span>
-    </div>
+    <div class="listhdr"><span class="listtitle" id="lbl-hist">Historial</span><span class="listsub" id="hsub"></span></div>
     <div id="hlist"></div>
   </div>
 
-  <div class="screen" id="s-search">
-    <p class="stitle">Buscar</p>
-    <div class="sbox">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6b6285" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="sinput" type="text" placeholder="Buscar por tema..." oninput="buscar()">
-    </div>
-    <div class="chips">
-      <span class="chip" onclick="btema('paz')">Paz</span>
-      <span class="chip" onclick="btema('fe')">Fe</span>
-      <span class="chip" onclick="btema('amor')">Amor</span>
-      <span class="chip" onclick="btema('fortaleza')">Fortaleza</span>
-      <span class="chip" onclick="btema('esperanza')">Esperanza</span>
-      <span class="chip" onclick="btema('alegría')">Alegría</span>
-      <span class="chip" onclick="btema('gracia')">Gracia</span>
-      <span class="chip" onclick="btema('victoria')">Victoria</span>
-    </div>
-    <div id="sres"></div>
+  <div class="screen" id="s-favs">
+    <div class="listhdr"><span class="listtitle" id="lbl-favs">Favoritos</span><span class="listsub" id="fsub"></span></div>
+    <div id="flist"></div>
   </div>
 
   <div class="screen" id="s-settings">
-    <p class="stitle">Ajustes</p>
+    <p class="stitle" id="lbl-settings">Ajustes</p>
     <div>
-      <div class="sglabel">Apariencia</div>
+      <div class="sglabel" id="lbl-apar">Apariencia</div>
       <div class="srow" onclick="cambiarTema()">
-        <div class="sleft">
-          <div class="sicon">🌙</div>
-          <div><div class="sname">Tema oscuro</div><div class="sval" id="tval">Activado</div></div>
-        </div>
+        <div class="sleft"><div class="sicon">🌙</div><div><div class="sname" id="lbl-dark">Tema oscuro</div><div class="sval" id="tval">Activado</div></div></div>
         <div class="tog on" id="tog"><div class="togthumb"></div></div>
       </div>
     </div>
     <div>
-      <div class="sglabel">Información</div>
-      <div class="srow" style="cursor:default">
-        <div class="sleft"><div class="sicon">📖</div><div><div class="sname">Versión</div><div class="sval">1.0.0</div></div></div>
-      </div>
-      <div class="srow" style="cursor:default">
-        <div class="sleft"><div class="sicon">✦</div><div><div class="sname">Versículos</div><div class="sval">365 promesas</div></div></div>
-      </div>
+      <div class="sglabel" id="lbl-idioma">Idioma</div>
+      <div class="card" style="padding:14px"><div class="langrow" id="langRow"></div></div>
     </div>
     <div>
-      <div class="sglabel">Desarrollador</div>
+      <div class="sglabel" id="lbl-info">Información</div>
+      <div class="srow" style="cursor:default"><div class="sleft"><div class="sicon">📖</div><div><div class="sname">Versión</div><div class="sval">1.0.0</div></div></div></div>
+      <div class="srow" style="cursor:default"><div class="sleft"><div class="sicon">✦</div><div><div class="sname" id="lbl-vcount-name">Versículos</div><div class="sval" id="vcount"></div></div></div></div>
+    </div>
+    <div>
+      <div class="sglabel" id="lbl-dev">Desarrollador</div>
       <div class="devcard">
         <div class="devav">👨‍💻</div>
         <div class="devname">Fernando Navarro</div>
-        <div class="devrole">Desarrollador</div>
+        <div class="devrole" id="lbl-devrole">Desarrollador</div>
         <div class="devemail">✉ fernandonavarro8700@gmail.com</div>
       </div>
     </div>
@@ -252,335 +217,527 @@ body.light .nav{background:#ece6ff;border-color:rgba(124,92,191,0.15)}
   <nav class="nav">
     <div class="ni on" id="n-home" onclick="ir('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Inicio<div class="ndot"></div>
+      <span id="nl-home">Inicio</span><div class="ndot"></div>
     </div>
     <div class="ni" id="n-history" onclick="ir('history')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Historial<div class="ndot"></div>
+      <span id="nl-hist">Historial</span><div class="ndot"></div>
     </div>
-    <div class="ni" id="n-search" onclick="ir('search')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      Buscar<div class="ndot"></div>
+    <div class="ni" id="n-favs" onclick="ir('favs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span id="nl-favs">Favoritos</span><div class="ndot"></div>
     </div>
     <div class="ni" id="n-image" onclick="ir('image')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      Imagen<div class="ndot"></div>
+      <span id="nl-img">Imagen</span><div class="ndot"></div>
     </div>
     <div class="ni" id="n-settings" onclick="ir('settings')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      Ajustes<div class="ndot"></div>
+      <span id="nl-set">Ajustes</span><div class="ndot"></div>
     </div>
   </nav>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-var VV = [
-  {t:'"Todo lo puedo en Cristo que me fortalece."',r:'— Filipenses 4:13',p:'Dios te da fuerzas para enfrentar cualquier situación. Su poder actúa en ti.',tp:['fortaleza','fe']},
-  {t:'"Porque yo sé los planes que tengo para ustedes, planes de bienestar y no de calamidad."',r:'— Jeremías 29:11',p:'El Señor tiene propósitos de bien para tu vida. Tu futuro está lleno de esperanza.',tp:['esperanza','fe']},
-  {t:'"El Señor es mi pastor; nada me faltará."',r:'— Salmos 23:1',p:'Dios provee todo lo que necesitas. Cuida cada detalle de tu vida con amor.',tp:['paz','amor']},
-  {t:'"Echa sobre el Señor tu carga, y Él te sustentará."',r:'— Salmos 55:22',p:'No tienes que cargar sola tus preocupaciones. Dios te invita a entregárselas.',tp:['paz','fe']},
-  {t:'"No temas, porque yo estoy contigo; no te angusties, porque yo soy tu Dios."',r:'— Isaías 41:10',p:'No estás sola. La presencia de Dios es tu fortaleza en todo momento de temor.',tp:['fortaleza','paz']},
-  {t:'"Mas buscad primeramente el reino de Dios, y todas estas cosas os serán añadidas."',r:'— Mateo 6:33',p:'Cuando pones a Dios primero, Él se encarga de suplir todas tus necesidades.',tp:['fe','esperanza']},
-  {t:'"El amor es sufrido, es benigno; el amor no tiene envidia, no se jacta."',r:'— 1 Corintios 13:4',p:'El amor verdadero de Dios es perfecto y paciente. Ese amor vive en ti.',tp:['amor']},
-  {t:'"Deléitate en el Señor, y Él te concederá los deseos de tu corazón."',r:'— Salmos 37:4',p:'Cuando tu alegría está en Dios, tus deseos se alinean con los Suyos.',tp:['alegría','fe']},
-  {t:'"Confía en el Señor de todo corazón, y no te apoyes en tu propia prudencia."',r:'— Proverbios 3:5-6',p:'Soltar el control y confiar en Dios es la decisión más sabia que puedes tomar.',tp:['fe','paz']},
-  {t:'"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito."',r:'— Juan 3:16',p:'El amor de Dios es tan inmenso que entregó lo más valioso. Sin condiciones.',tp:['amor','fe']},
-  {t:'"Sé fuerte y valiente. No te atemorices ni te desanimes."',r:'— Josué 1:9',p:'Dios camina contigo en cada paso. Su presencia es tu fortaleza.',tp:['fortaleza','fe']},
-  {t:'"Dios dispone todas las cosas para el bien de quienes lo aman."',r:'— Romanos 8:28',p:'Nada en tu vida es desperdiciado. Hasta lo difícil tiene un propósito en Dios.',tp:['esperanza','fe']},
-  {t:'"Los que confían en el Señor renovarán sus fuerzas; volarán como las águilas."',r:'— Isaías 40:31',p:'Esperar en Dios renueva energías que ningún descanso humano puede dar.',tp:['fortaleza','esperanza']},
-  {t:'"Dios es nuestro amparo y nuestra fortaleza, nuestra ayuda segura en momentos de angustia."',r:'— Salmos 46:1',p:'En cada crisis, Dios es el refugio que no falla. Puedes correr a Él siempre.',tp:['paz','fortaleza']},
-  {t:'"En el mundo tendrán aflicción; pero confíen, yo he vencido al mundo."',r:'— Juan 16:33',p:'Las dificultades son reales, pero la victoria de Cristo es mayor.',tp:['paz','victoria']},
-  {t:'"El gran amor del Señor nunca se acaba. Cada mañana se renuevan sus bondades."',r:'— Lamentaciones 3:22-23',p:'Cada amanecer es un regalo fresco de la misericordia de Dios.',tp:['amor','esperanza']},
-  {t:'"La paz de Dios, que sobrepasa todo entendimiento, guardará vuestros corazones."',r:'— Filipenses 4:7',p:'La paz que Dios da va más allá de la razón humana. Protege tu corazón.',tp:['paz']},
-  {t:'"Vengan a mí todos ustedes que están cansados. Yo les daré descanso."',r:'— Mateo 11:28',p:'Jesús te invita a descansar en Él cuando estás agotada.',tp:['paz','amor']},
-  {t:'"Jehová es mi luz y mi salvación; ¿de quién temeré?"',r:'— Salmos 27:1',p:'Con Dios como tu luz, la oscuridad no puede dominarte.',tp:['fe','fortaleza']},
-  {t:'"Clama a mí, y yo te responderé."',r:'— Jeremías 33:3',p:'Dios no está lejos ni callado. Cuando lo buscas, Él revela Su sabiduría.',tp:['fe','esperanza']},
-  {t:'"Si Dios es por nosotros, ¿quién contra nosotros?"',r:'— Romanos 8:31',p:'Con Dios de tu lado, ningún adversario puede tener la última palabra.',tp:['victoria','fe']},
-  {t:'"Yo soy el camino, la verdad y la vida."',r:'— Juan 14:6',p:'En Jesús encontramos la dirección, la certeza y el propósito para nuestra existencia.',tp:['fe','esperanza']},
-  {t:'"Mi gracia es suficiente para ti, porque mi poder se perfecciona en la debilidad."',r:'— 2 Corintios 12:9',p:'En tus momentos de mayor debilidad, el poder de Dios brilla con más intensidad.',tp:['gracia','fortaleza']},
-  {t:'"No os afanéis por nada. En todo presentad vuestras peticiones a Dios."',r:'— Filipenses 4:6',p:'La ansiedad no tiene que vivir en ti. La oración abre la puerta a la paz de Dios.',tp:['paz','fe']},
-  {t:'"Porque Dios no nos ha dado espíritu de cobardía, sino de poder, de amor y de dominio propio."',r:'— 2 Timoteo 1:7',p:'El temor no viene de Dios. Tienes poder, amor y una mente sana en Él.',tp:['fortaleza','fe']},
-  {t:'"El que comenzó en vosotros la buena obra, la perfeccionará."',r:'— Filipenses 1:6',p:'Lo que Dios comenzó en tu vida lo terminará. Él no abandona Sus proyectos.',tp:['esperanza','fe']},
-  {t:'"Ningún arma forjada contra ti prosperará."',r:'— Isaías 54:17',p:'Todo plan del enemigo contra ti está destinado al fracaso. Dios te protege.',tp:['victoria','fe']},
-  {t:'"Por la gracia de Dios soy lo que soy."',r:'— 1 Corintios 15:10',p:'No tienes que ganarte el amor de Dios. Su gracia te sostiene tal como eres.',tp:['gracia','amor']},
-  {t:'"El gozo del Señor es vuestra fortaleza."',r:'— Nehemías 8:10',p:'La alegría que viene de Dios no depende de circunstancias. Es una fortaleza interior.',tp:['alegría','fortaleza']},
-  {t:'"Dad gracias en todo, porque esta es la voluntad de Dios."',r:'— 1 Tesalonicenses 5:18',p:'La gratitud en cualquier circunstancia abre tu corazón a ver las bendiciones de Dios.',tp:['alegría','fe']},
-  {t:'"El amor nunca deja de ser."',r:'— 1 Corintios 13:8',p:'Todo pasa, pero el amor de Dios permanece. Es la única constante eterna.',tp:['amor']},
-  {t:'"Dios es amor."',r:'— 1 Juan 4:8',p:'No es solo que Dios tenga amor. Él es amor en Su esencia más profunda.',tp:['amor']},
-  {t:'"Con amor eterno te he amado."',r:'— Jeremías 31:3',p:'El amor de Dios no comenzó ayer ni terminará mañana. Es eterno, sin condiciones.',tp:['amor']},
-  {t:'"No hay nada imposible para Dios."',r:'— Lucas 1:37',p:'Los límites que ves no son los límites de Dios. Él puede hacer lo que parece imposible.',tp:['fe','esperanza']},
-  {t:'"Estoy convencido de que nada podrá separarnos del amor de Dios."',r:'— Romanos 8:38-39',p:'El amor de Dios es indestructible. Absolutamente nada puede separarte de Él.',tp:['amor','fe']},
-  {t:'"El Señor cumplirá su propósito en mí."',r:'— Salmos 138:8',p:'Tu historia no ha terminado. Dios está cumpliendo Su plan en cada etapa de tu vida.',tp:['esperanza','fe']},
-  {t:'"El Señor está cerca de los que tienen el corazón quebrantado."',r:'— Salmos 34:18',p:'En tu dolor, Dios no se aleja. Está más cerca que nunca.',tp:['amor','paz']},
-  {t:'"Mi paz os doy; no os la doy como el mundo la da."',r:'— Juan 14:27',p:'La paz de Jesús no depende de circunstancias perfectas.',tp:['paz','amor']},
-  {t:'"El fruto del Espíritu es amor, gozo, paz, paciencia."',r:'— Gálatas 5:22',p:'El Espíritu Santo produce en ti frutos que transforman tu vida y la de quienes te rodean.',tp:['amor','alegría','paz']},
-  {t:'"Antes que me formaras en el vientre, te conocí."',r:'— Jeremías 1:5',p:'Dios te conoció antes de que existieras. Tu vida tiene propósito desde antes de nacer.',tp:['amor','esperanza']},
-  {t:'"El Señor es mi fortaleza y mi escudo; en Él confió mi corazón."',r:'— Salmos 28:7',p:'Dios no solo te da fuerzas, es Él mismo tu escudo en cada batalla.',tp:['fortaleza','fe']},
-  {t:'"Me mostrarás la senda de la vida; en tu presencia hay plenitud de gozo."',r:'— Salmos 16:11',p:'En la presencia de Dios se encuentra el gozo más completo y la vida más plena.',tp:['alegría','fe']},
-  {t:'"Cuando pases por las aguas, yo estaré contigo."',r:'— Isaías 43:2',p:'Dios no promete que no habrá aguas difíciles. Promete estar contigo en ellas.',tp:['paz','fe']},
-  {t:'"El Señor peleará por vosotros, y vosotros estaréis tranquilos."',r:'— Éxodo 14:14',p:'No tienes que luchar sola cada batalla. Dios pelea por ti.',tp:['paz','fortaleza']},
-  {t:'"Él sana a los quebrantados de corazón y venda sus heridas."',r:'— Salmos 147:3',p:'Ninguna herida está fuera del alcance sanador de Dios. Él restaura lo roto.',tp:['amor','esperanza']},
-  {t:'"Los que buscan al Señor no carecerán de ningún bien."',r:'— Salmos 34:10',p:'Buscar a Dios activamente es el mejor camino a la provisión que existe.',tp:['fe','esperanza']},
-  {t:'"El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente."',r:'— Salmos 91:1',p:'Vivir en la presencia de Dios es el lugar más seguro que existe.',tp:['paz','fe']},
-  {t:'"La bondad y la misericordia me seguirán todos los días de mi vida."',r:'— Salmos 23:6',p:'La bondad de Dios no te abandona. Te sigue a donde quiera que vayas.',tp:['amor','paz']},
-  {t:'"Regocijaos en el Señor siempre; otra vez digo: ¡Regocijaos!"',r:'— Filipenses 4:4',p:'El gozo en Dios no es opcional ni estacional. Es una postura de vida.',tp:['alegría','fe']},
-  {t:'"Él es el mismo ayer, hoy y por los siglos."',r:'— Hebreos 13:8',p:'Dios no cambia. El mismo que obró milagros en el pasado actúa hoy en tu vida.',tp:['fe','esperanza']},
-  {t:'"Gustad y ved que es bueno el Señor."',r:'— Salmos 34:8',p:'La bondad de Dios no es solo una doctrina. Es algo que puedes experimentar personalmente.',tp:['alegría','fe']},
-  {t:'"Cristo en vosotros, la esperanza de gloria."',r:'— Colosenses 1:27',p:'La presencia de Cristo en tu interior es la garantía de una gloria futura.',tp:['esperanza','fe']},
-  {t:'"Por gracia sois salvos por medio de la fe."',r:'— Efesios 2:8',p:'La salvación es un regalo gratuito de Dios. No puedes ganarlo, solo recibirlo.',tp:['gracia','amor']},
-  {t:'"Cuán preciosos me son, oh Dios, tus pensamientos."',r:'— Salmos 139:17',p:'Dios piensa en ti constantemente. Sus pensamientos hacia ti son más que la arena del mar.',tp:['amor','fe']},
-  {t:'"El Señor restituirá lo que la langosta comió."',r:'— Joel 2:25',p:'Dios puede restaurar los años y las cosas que sientes que se perdieron.',tp:['esperanza','gracia']},
-  {t:'"Haced el bien y no os canséis, porque a su tiempo segaréis."',r:'— Gálatas 6:9',p:'Sembrar el bien tiene cosecha asegurada. No te canses de hacer lo correcto.',tp:['esperanza','fe']},
-  {t:'"El amor echa fuera el temor."',r:'— 1 Juan 4:18',p:'Cuando el amor de Dios llena tu corazón, el temor no encuentra espacio donde vivir.',tp:['amor','paz']},
-  {t:'"Estad quietos y conoced que yo soy Dios."',r:'— Salmos 46:10',p:'A veces Dios nos pide detenernos para experimentar Su presencia plenamente.',tp:['paz','fe']},
-  {t:'"El Señor levanta a los caídos."',r:'— Salmos 146:8',p:'No importa cuánto hayas caído, la mano de Dios está extendida para levantarte.',tp:['gracia','amor']},
-  {t:'"Tú guardarás en completa paz a aquel cuyo pensamiento en ti persevera."',r:'— Isaías 26:3',p:'La paz perfecta viene de mantener la mente puesta en Dios constantemente.',tp:['paz','fe']},
-  {t:'"El nombre del Señor es torre fuerte; a él corre el justo y está a salvo."',r:'— Proverbios 18:10',p:'En los momentos de peligro, el nombre de Dios es un refugio al que puedes correr.',tp:['paz','fortaleza']},
-  {t:'"En Dios está mi salvación y mi gloria."',r:'— Salmos 62:7',p:'Tu valor y seguridad no dependen de lo que otros digan, sino de quién es Dios.',tp:['fe','alegría']},
-  {t:'"El Señor es bueno con todos; su ternura se extiende a todo lo que creó."',r:'— Salmos 145:9',p:'La bondad de Dios no conoce exclusiones. Se extiende a cada ser y situación.',tp:['amor','gracia']},
-  {t:'"Seré misericordioso con sus injusticias y nunca más me acordaré de sus pecados."',r:'— Hebreos 8:12',p:'Dios no guarda rencor. Cuando perdona, lo hace completamente y para siempre.',tp:['gracia','amor']},
-  {t:'"Como el padre se compadece de los hijos, se compadece el Señor de los que le temen."',r:'— Salmos 103:13',p:'Dios te mira con la ternura de un padre que ama profundamente a su hijo.',tp:['amor','gracia']},
-  {t:'"Y después de que hayáis padecido un poco, el Dios de gracia os restaurará."',r:'— 1 Pedro 5:10',p:'El sufrimiento es temporal. La restauración que Dios trae es completa y gloriosa.',tp:['esperanza','gracia']},
-  {t:'"Echad toda vuestra ansiedad sobre él, porque él tiene cuidado de vosotros."',r:'— 1 Pedro 5:7',p:'No guardas tus cargas sola. Dios te invita a transferirle cada preocupación.',tp:['paz','amor']},
-  {t:'"El eterno Dios es tu refugio, y acá abajo los brazos eternos."',r:'— Deuteronomio 33:27',p:'Los brazos eternos de Dios están siempre debajo de ti, sosteniéndote.',tp:['paz','amor']},
-  {t:'"Al humilde da gracia."',r:'— Proverbios 3:34',p:'La humildad abre la puerta a la gracia de Dios que transforma toda situación.',tp:['gracia','fe']},
-  {t:'"Bienaventurado el hombre que halla la sabiduría."',r:'— Proverbios 3:13',p:'La sabiduría de Dios es el tesoro más valioso que puedes buscar en la vida.',tp:['fe','alegría']},
-  {t:'"El cielo y la tierra pasarán, pero mis palabras no pasarán."',r:'— Mateo 24:35',p:'Las promesas de Dios son eternas. Más permanentes que el universo mismo.',tp:['fe','esperanza']},
-  {t:'"Dios no es injusto para olvidar vuestra obra y el trabajo de amor."',r:'— Hebreos 6:10',p:'Cada acto de amor y servicio que haces no pasa desapercibido ante Dios.',tp:['amor','esperanza']},
-  {t:'"El Señor reina; regocíjese la tierra."',r:'— Salmos 97:1',p:'Saber que Dios reina sobre todo trae una alegría profunda y una paz inquebrantable.',tp:['alegría','fe']},
-  {t:'"Bienaventurados los puros de corazón, porque ellos verán a Dios."',r:'— Mateo 5:8',p:'La pureza del corazón abre los ojos espirituales para ver la realidad de Dios.',tp:['fe','alegría']},
-  {t:'"Todo aquel que invocare el nombre del Señor, será salvo."',r:'— Romanos 10:13',p:'El acceso a Dios está abierto para todos. Solo hace falta llamarlo.',tp:['fe','amor']},
-  {t:'"Bienaventurados los que lloran, porque ellos recibirán consolación."',r:'— Mateo 5:4',p:'Dios no ignora tus lágrimas. Las ve, las cuenta y trae consuelo en Su tiempo.',tp:['amor','esperanza']},
-  {t:'"Dios secará toda lágrima de los ojos de ellos."',r:'— Apocalipsis 21:4',p:'Hay un día donde todo dolor terminará. Dios mismo limpiará cada lágrima.',tp:['esperanza','amor']},
-  {t:'"Cuanto está lejos el oriente del occidente, hizo alejar de nosotros nuestras rebeliones."',r:'— Salmos 103:12',p:'El perdón de Dios es radical y total. Tus errores han sido removidos para siempre.',tp:['gracia','amor']},
-  {t:'"El Señor te dé la paz."',r:'— Números 6:26',p:'La paz de Dios es plenitud en todos los ámbitos de tu vida.',tp:['paz']},
-  {t:'"Y a Aquel que es poderoso para hacer todo mucho más de lo que pedimos."',r:'— Efesios 3:20',p:'Las limitaciones que ves no son las limitaciones de Dios. Él actúa más allá.',tp:['fe','esperanza']},
-  {t:'"Mas el que persevere hasta el fin, éste será salvo."',r:'— Mateo 24:13',p:'La perseverancia tiene recompensa. No te rindas, el final vale la pena.',tp:['fortaleza','esperanza']},
-  {t:'"El Señor es mi porción en la tierra de los vivientes."',r:'— Salmos 142:5',p:'Tener a Dios como tu herencia es tenerlo todo. Nada más puede compararse.',tp:['fe','alegría']},
-  {t:'"Tuyo es el reino, el poder y la gloria para siempre."',r:'— Mateo 6:13',p:'Reconocer que todo pertenece a Dios nos libera de la carga de controlarlo todo.',tp:['fe','paz']},
-  {t:'"El amor cubre multitud de pecados."',r:'— 1 Pedro 4:8',p:'El amor genuino que fluye de Dios tiene poder para sanar y restaurar relaciones.',tp:['amor','gracia']},
-  {t:'"En amor nos predestinó para ser adoptados como hijos suyos."',r:'— Efesios 1:5',p:'Eres hijo de Dios por adopción divina. Tu familia espiritual es eterna.',tp:['amor','fe']},
-  {t:'"Yo soy la vid, vosotros los pámpanos. El que permanece en mí lleva mucho fruto."',r:'— Juan 15:5',p:'Permanecer en Jesús es la fuente de todo fruto real en tu vida.',tp:['fe','amor']},
-  {t:'"Bendice, alma mía, al Señor, y no olvides ninguno de sus beneficios."',r:'— Salmos 103:2',p:'Recordar las bendiciones pasadas de Dios alimenta la fe para lo que viene.',tp:['alegría','fe']},
-  {t:'"Mi socorro viene del Señor, que hizo los cielos y la tierra."',r:'— Salmos 121:2',p:'Tu ayuda viene del Creador de todo lo que existe.',tp:['fe','fortaleza']},
-  {t:'"El Señor guardará tu alma."',r:'— Salmos 121:7',p:'La protección de Dios no es parcial. Cuida tu vida completa, interior y exterior.',tp:['paz','fe']},
-  {t:'"Por el Señor son ordenados los pasos del hombre."',r:'— Salmos 37:23',p:'Cada paso tuyo tiene la guía de Dios. Ningún camino es demasiado oscuro para Él.',tp:['fe','esperanza']},
-  {t:'"He aprendido a contentarme, cualquiera que sea mi situación."',r:'— Filipenses 4:11',p:'El contentamiento es una habilidad que se aprende en la escuela de la fe.',tp:['paz','fe']},
-  {t:'"Los ojos del Señor recorren toda la tierra para fortalecer a los de corazón íntegro."',r:'— 2 Crónicas 16:9',p:'Dios está activamente buscando a quien pueda fortalecer. Está buscándote a ti.',tp:['fortaleza','fe']},
-  {t:'"Yo soy el Alfa y la Omega, el primero y el último."',r:'— Apocalipsis 1:8',p:'Dios es el inicio y el fin de toda historia, incluyendo la tuya.',tp:['fe','esperanza']},
-  {t:'"Dios está con nosotros."',r:'— Isaías 8:10',p:'Esta es la promesa más poderosa: Dios mismo está presente contigo.',tp:['fe','paz']},
-  {t:'"Bienaventurados los misericordiosos, porque ellos alcanzarán misericordia."',r:'— Mateo 5:7',p:'Cuando somos misericordiosos con otros, experimentamos la misericordia de Dios.',tp:['amor','gracia']},
-  {t:'"El Señor es bueno para los que en Él esperan."',r:'— Lamentaciones 3:25',p:'La espera en Dios nunca es en vano. Su bondad llega en el momento perfecto.',tp:['esperanza','paz']},
-  {t:'"Dios poderoso para hacer que toda gracia abunde en vosotros."',r:'— 2 Corintios 9:8',p:'Dios no da con cuentagotas. Derrama Su gracia en abundancia sobre tu vida.',tp:['gracia','esperanza']},
-  {t:'"Toda la Escritura es inspirada por Dios."',r:'— 2 Timoteo 3:16',p:'La Biblia no es un libro cualquiera. Contiene la voz misma de Dios para tu vida.',tp:['fe']},
-  {t:'"El temor del Señor es el principio de la sabiduría."',r:'— Proverbios 9:10',p:'Todo verdadero conocimiento comienza con reconocer quién es Dios.',tp:['fe']},
-  {t:'"De tal manera amó Dios al mundo que dio a Su Hijo."',r:'— Juan 3:16',p:'El amor de Dios no fue solo una declaración, fue una acción. La más grande de la historia.',tp:['amor','fe']},
-  {t:'"Cuando busques al Señor tu Dios, lo hallarás."',r:'— Deuteronomio 4:29',p:'Dios se deja encontrar. El que busca de todo corazón, encontrará.',tp:['fe','esperanza']},
-  {t:'"El Señor hará justicia a los que claman a Él."',r:'— Lucas 18:7',p:'Dios escucha cada oración. La perseverancia trae resultados.',tp:['esperanza','fe']},
-  {t:'"Todo lo que hagáis, hacedlo de corazón, como para el Señor."',r:'— Colosenses 3:23',p:'Cuando trabajas para Dios, cada tarea pequeña cobra un propósito eterno.',tp:['fe','alegría']},
-  {t:'"Grande es el Señor, y digno de suprema alabanza."',r:'— Salmos 145:3',p:'Reconocer la grandeza de Dios nos libera de la pequeñez de nuestros miedos.',tp:['alegría','fe']},
-  {t:'"Sus caminos son deleitosos, y todas sus veredas paz."',r:'— Proverbios 3:17',p:'Caminar en los caminos de Dios trae deleite y paz a cada paso.',tp:['paz','alegría']},
-  {t:'"De Él, por Él, y para Él son todas las cosas."',r:'— Romanos 11:36',p:'Todo tiene su origen, sustento y destino en Dios.',tp:['fe','esperanza']},
-  {t:'"El Señor te llevará como un padre lleva a su hijo."',r:'— Deuteronomio 1:31',p:'Dios no te pide que camines solo. Él te lleva cuando las fuerzas te faltan.',tp:['amor','paz']},
-  {t:'"En Él vivimos, nos movemos y somos."',r:'— Hechos 17:28',p:'Tu existencia completa se sostiene en Dios. Él es la razón de que estés aquí.',tp:['fe','amor']},
-  {t:'"Alabaré al Señor en todo tiempo."',r:'— Salmos 34:1',p:'La alabanza constante a Dios transforma nuestra perspectiva en cualquier situación.',tp:['alegría','fe']}
-];
+// ═══════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════
+var VV = [];          // versículos cargados
+var cv = 0;           // índice versículo actual
+var FAVS = [];        // favoritos [{t,r,p,t_en,p_en,...}]
+var HIST = [];        // historial [{t,r,p,...}]
+var lang = 'es';      // idioma actual
+var dark = true;      // tema
+var cbg = 0;          // fondo imagen
+var cfn = 0;          // fuente imagen
+var fsz = 16;         // tamaño fuente imagen
 
-while(VV.length < 365) {
-  VV.push(VV[VV.length % 100]);
-}
+var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTl4gu-aes-t4JLf9LeAq8m5S7ib2Vk3uSwfLumYk4rM_tEXimAT_45tD2EIYfef_0V0JfBMkryBchf/pub?output=csv';
 
 var BG = [
-  {c:['#0f0c1a','#1a1038','#0a2a4a'],l:'Noche'},
-  {c:['#1a0a0a','#4a1a0a','#c87941'],l:'Amanecer'},
-  {c:['#0a2a4a','#1b5a8a','#5ab4e0'],l:'Cielo'},
-  {c:['#0a2a0a','#1a4a1a','#2d7a3a'],l:'Bosque'},
-  {c:['#2a0a1a','#5a1a3a','#9a3a6a'],l:'Rosa'},
-  {c:['#1a1a0a','#3a3a0a','#8a7a1a'],l:'Dorado'},
-  {c:['#0a1a2a','#1a3a5a','#0a4a3a'],l:'Océano'},
-  {c:['#1a0a2a','#3a1a5a','#6a2a8a'],l:'Violeta'},
-  {c:['#2a1a0a','#5a3a1a','#9a6a3a'],l:'Tierra'},
-  {c:['#0a0a2a','#1a1a5a','#2a2a8a'],l:'Azul'}
+  {c:['#0e0b1f','#1a1038','#0a2a4a']},{c:['#1a0a0a','#4a1a0a','#c87941']},
+  {c:['#0a2a4a','#1b5a8a','#5ab4e0']},{c:['#0a2a0a','#1a4a1a','#2d7a3a']},
+  {c:['#2a0a1a','#5a1a3a','#9a3a6a']},{c:['#1a1a0a','#3a3a0a','#8a7a1a']},
+  {c:['#0a1a2a','#1a3a5a','#0a4a3a']},{c:['#1a0a2a','#3a1a5a','#6a2a8a']},
+  {c:['#2a1a0a','#5a3a1a','#9a6a3a']},{c:['#0a0a2a','#1a1a5a','#2a2a8a']}
 ];
-
 var FN = [
-  {n:'Georgia, serif',l:'Georgia'},
-  {n:'Palatino Linotype, serif',l:'Palatino'},
-  {n:'Times New Roman, serif',l:'Times'},
-  {n:'Arial, sans-serif',l:'Arial'},
+  {n:'Georgia, serif',l:'Georgia'},{n:'Palatino Linotype, serif',l:'Palatino'},
+  {n:'Times New Roman, serif',l:'Times'},{n:'Arial, sans-serif',l:'Arial'},
   {n:'Trebuchet MS, sans-serif',l:'Trebuchet'}
 ];
 
-var cv = 0, cbg = 0, cfn = 0, fsz = 16, dark = true;
+// Traducciones UI
+var TX = {
+  es:{badge:'✦ Promesa del día',plabel:'Promesa',fav:'Favorito',sig:'Siguiente',img:'Imagen',
+      img_title:'Crear imagen',bg:'Fondo',font:'Fuente',size:'Tamaño de letra',
+      dl:'Descargar',sh:'Compartir',hist:'Historial',favs:'Favoritos',
+      settings:'Ajustes',apar:'Apariencia',dark_lbl:'Tema oscuro',
+      on:'Activado',off:'Desactivado',idioma:'Idioma',info:'Información',
+      vcount:'Versículos cargados',dev:'Desarrollador',dev_role:'Desarrollador',
+      inicio:'Inicio',saved:'Imagen guardada ✓',
+      fav_on:'Agregado a favoritos ★',fav_off:'Eliminado de favoritos',
+      sin_fav:'Sin favoritos aún.\nTocá ☆ para guardar un versículo.',
+      loading:'Cargando...'},
+  en:{badge:'✦ Promise of the day',plabel:'Promise',fav:'Favorite',sig:'Next',img:'Image',
+      img_title:'Create image',bg:'Background',font:'Font',size:'Font size',
+      dl:'Download',sh:'Share',hist:'History',favs:'Favorites',
+      settings:'Settings',apar:'Appearance',dark_lbl:'Dark theme',
+      on:'Enabled',off:'Disabled',idioma:'Language',info:'Information',
+      vcount:'Verses loaded',dev:'Developer',dev_role:'Developer',
+      inicio:'Home',saved:'Image saved ✓',
+      fav_on:'Added to favorites ★',fav_off:'Removed from favorites',
+      sin_fav:'No favorites yet.\nTap ☆ to save a verse.',
+      loading:'Loading...'},
+  pt:{badge:'✦ Promessa do dia',plabel:'Promessa',fav:'Favorito',sig:'Próximo',img:'Imagem',
+      img_title:'Criar imagem',bg:'Fundo',font:'Fonte',size:'Tamanho da letra',
+      dl:'Baixar',sh:'Compartilhar',hist:'Histórico',favs:'Favoritos',
+      settings:'Configurações',apar:'Aparência',dark_lbl:'Tema escuro',
+      on:'Ativado',off:'Desativado',idioma:'Idioma',info:'Informação',
+      vcount:'Versículos carregados',dev:'Desenvolvedor',dev_role:'Desenvolvedor',
+      inicio:'Início',saved:'Imagem salva ✓',
+      fav_on:'Adicionado aos favoritos ★',fav_off:'Removido dos favoritos',
+      sin_fav:'Sem favoritos ainda.\nToque em ☆ para salvar.',
+      loading:'Carregando...'},
+  fr:{badge:'✦ Promesse du jour',plabel:'Promesse',fav:'Favori',sig:'Suivant',img:'Image',
+      img_title:"Créer une image",bg:'Fond',font:'Police',size:'Taille de police',
+      dl:'Télécharger',sh:'Partager',hist:'Historique',favs:'Favoris',
+      settings:'Paramètres',apar:'Apparence',dark_lbl:'Thème sombre',
+      on:'Activé',off:'Désactivé',idioma:'Langue',info:'Information',
+      vcount:'Versets chargés',dev:'Développeur',dev_role:'Développeur',
+      inicio:'Accueil',saved:'Image sauvegardée ✓',
+      fav_on:'Ajouté aux favoris ★',fav_off:'Retiré des favoris',
+      sin_fav:"Pas encore de favoris.\nAppuyez sur ☆ pour en ajouter.",
+      loading:'Chargement...'}
+};
 
-function doy() {
-  var n = new Date(), s = new Date(n.getFullYear(),0,0);
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function L(k){ return (TX[lang]||TX.es)[k]||k; }
+
+function vT(v){
+  // texto del versículo según idioma
+  if(lang==='en' && v.t_en && v.t_en.length>3) return v.t_en;
+  if(lang==='pt' && v.t_pt && v.t_pt.length>3) return v.t_pt;
+  if(lang==='fr' && v.t_fr && v.t_fr.length>3) return v.t_fr;
+  return v.t;
+}
+function vP(v){
+  // promesa según idioma
+  if(lang==='en' && v.p_en && v.p_en.length>3) return v.p_en;
+  if(lang==='pt' && v.p_pt && v.p_pt.length>3) return v.p_pt;
+  if(lang==='fr' && v.p_fr && v.p_fr.length>3) return v.p_fr;
+  return v.p;
+}
+
+function doy(){
+  var n=new Date(), s=new Date(n.getFullYear(),0,0);
   return Math.floor((n-s)/86400000);
 }
 
-function setup() {
-  var d = new Date();
-  document.getElementById('fecha').textContent = d.toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short'});
-  cv = (doy()-1+VV.length)%VV.length;
-  mostrar();
-  hacerBG();
-  hacerFonts();
-  hacerHist();
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+function lsGet(k,def){
+  try{ var v=localStorage.getItem(k); return v!==null?v:def; }catch(e){return def;}
+}
+function lsSet(k,v){ try{localStorage.setItem(k,String(v));}catch(e){} }
+function lsGetJ(k,def){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):def; }catch(e){return def;} }
+function lsSetJ(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+
+// ═══════════════════════════════════════════════
+// PARSE CSV
+// ═══════════════════════════════════════════════
+function parseCSV(text){
+  var rows=[], lines=text.trim().split('\n');
+  for(var i=1;i<lines.length;i++){
+    var cols=[], cur='', inQ=false;
+    for(var c=0;c<lines[i].length;c++){
+      var ch=lines[i][c];
+      if(ch==='"'){ inQ=!inQ; }
+      else if(ch===','&&!inQ){ cols.push(cur.trim()); cur=''; }
+      else{ cur+=ch; }
+    }
+    cols.push(cur.trim());
+    // col: 0=t_es, 1=ref, 2=p_es, 3=topics, 4=t_en, 5=p_en, 6=t_pt, 7=p_pt, 8=t_fr, 9=p_fr
+    if(cols[0] && cols[0].length>2){
+      rows.push({
+        t:  cols[0]||'', r: cols[1]||'', p:  cols[2]||'',
+        tp: cols[3]?(cols[3].split(',').map(function(x){return x.trim().toLowerCase();})):['fe'],
+        t_en: cols[4]||'', p_en: cols[5]||'',
+        t_pt: cols[6]||'', p_pt: cols[7]||'',
+        t_fr: cols[8]||'', p_fr: cols[9]||''
+      });
+    }
+  }
+  return rows;
 }
 
-function mostrar() {
+// ═══════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════
+window.onload = function(){
+  // Leer estado guardado
+  lang  = lsGet('pd_lang','es');
+  dark  = lsGet('pd_dark','1')==='1';
+  FAVS  = lsGetJ('pd_favs',[]);
+  HIST  = lsGetJ('pd_hist',[]);
+  VV    = lsGetJ('pd_verses',[]);
+
+  // cv: guardar índice entre sesiones
+  var savedCv = lsGet('pd_cv', null);
+
+  // Aplicar tema e idioma inmediatamente
+  document.body.className = dark?'':'light';
+  document.getElementById('tog').className = 'tog'+(dark?' on':'');
+  actualizarUI();
+
+  // Fecha
+  var d=new Date();
+  document.getElementById('fecha').textContent =
+    d.toLocaleDateString('es-AR',{day:'numeric',month:'long'});
+
+  // Si ya teníamos versículos guardados, mostramos mientras cargamos
+  if(VV.length>0){
+    cv = savedCv!==null ? (parseInt(savedCv)%VV.length) : (doy()-1+VV.length)%VV.length;
+    mostrar();
+    hacerBG(); hacerFonts(); hacerLangs();
+    document.getElementById('vcount').textContent = VV.length;
+  }
+
+  // Buscar versículos frescos en segundo plano
+  fetch(SHEET)
+    .then(function(r){ return r.text(); })
+    .then(function(txt){
+      var parsed = parseCSV(txt);
+      if(parsed.length>0){
+        VV = parsed;
+        lsSetJ('pd_verses', VV);
+        // Solo actualizar cv si no teníamos nada antes
+        if(savedCv===null){
+          cv = (doy()-1+VV.length)%VV.length;
+          lsSet('pd_cv', cv);
+        } else {
+          cv = parseInt(savedCv)%VV.length;
+        }
+        mostrar();
+        document.getElementById('vcount').textContent = VV.length;
+      }
+    })
+    .catch(function(){
+      // Sin internet, ya mostramos lo guardado arriba
+    });
+
+  hacerBG(); hacerFonts(); hacerLangs();
+};
+
+// ═══════════════════════════════════════════════
+// MOSTRAR VERSÍCULO
+// ═══════════════════════════════════════════════
+function mostrar(){
+  if(!VV.length) return;
   var v = VV[cv];
-  document.getElementById('vt').textContent = v.t;
+  document.getElementById('vt').textContent = vT(v);
   document.getElementById('vr').textContent = v.r;
-  document.getElementById('vp').textContent = v.p;
-  var d = cv+1;
-  document.getElementById('badge').textContent = '✦ Día '+d+' de 365';
-  document.getElementById('pl').textContent = 'Día '+d+' de 365';
-  document.getElementById('pf').style.width = (d/365*100)+'%';
+  document.getElementById('vp').textContent = vP(v);
+  var fav = esFav(v);
+  document.getElementById('favIcon').textContent = fav?'★':'☆';
+  document.getElementById('btnFav').className = 'btn btnfav'+(fav?' on':'');
 }
 
-function nextVerse() {
-  cv = (cv+1)%VV.length;
+function nextVerse(){
+  if(!VV.length) return;
+  cv = (cv+1) % VV.length;
+  lsSet('pd_cv', cv);          // guardar posición
+  agregarHist(VV[cv]);         // guardar en historial
   var el = document.getElementById('vt');
   el.style.opacity='0';
-  setTimeout(function(){ mostrar(); el.style.transition='opacity 0.4s'; el.style.opacity='1'; },200);
+  setTimeout(function(){
+    mostrar();
+    el.style.transition='opacity 0.4s';
+    el.style.opacity='1';
+  },180);
 }
 
-function ir(p) {
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
-  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on')});
+// ═══════════════════════════════════════════════
+// HISTORIAL
+// ═══════════════════════════════════════════════
+function agregarHist(v){
+  if(!v) return;
+  // no duplicar el último
+  if(HIST.length>0 && HIST[HIST.length-1].t===v.t) return;
+  HIST.push({t:v.t,r:v.r,p:v.p,t_en:v.t_en||'',p_en:v.p_en||'',t_pt:v.t_pt||'',p_pt:v.p_pt||'',t_fr:v.t_fr||'',p_fr:v.p_fr||''});
+  if(HIST.length>50) HIST.shift();
+  lsSetJ('pd_hist', HIST);
+}
+
+function renderHist(){
+  var list = document.getElementById('hlist');
+  list.innerHTML = '';
+  if(HIST.length===0){
+    list.innerHTML='<div class="empty">📖<br>Todavía no hay historial.</div>';
+    document.getElementById('hsub').textContent='';
+    return;
+  }
+  var slice = HIST.slice().reverse(); // más reciente primero
+  document.getElementById('hsub').textContent = slice.length+' versículos';
+  slice.forEach(function(v,i){ list.appendChild(makeVCard(v,i+1,false)); });
+}
+
+// ═══════════════════════════════════════════════
+// FAVORITOS
+// ═══════════════════════════════════════════════
+function esFav(v){ return FAVS.some(function(f){return f.t===v.t;}); }
+
+function toggleFav(){
+  if(!VV.length) return;
+  var v = VV[cv];
+  if(esFav(v)){
+    FAVS = FAVS.filter(function(f){return f.t!==v.t;});
+    toast(L('fav_off'));
+  } else {
+    FAVS.push({t:v.t,r:v.r,p:v.p,t_en:v.t_en||'',p_en:v.p_en||'',t_pt:v.t_pt||'',p_pt:v.p_pt||'',t_fr:v.t_fr||'',p_fr:v.p_fr||''});
+    toast(L('fav_on'));
+  }
+  lsSetJ('pd_favs', FAVS);
+  mostrar();
+}
+
+function renderFavs(){
+  var list = document.getElementById('flist');
+  list.innerHTML = '';
+  document.getElementById('fsub').textContent = FAVS.length+' versículos';
+  if(FAVS.length===0){
+    list.innerHTML='<div class="empty">⭐<br>'+L('sin_fav').replace('\n','<br>')+'</div>';
+    return;
+  }
+  FAVS.forEach(function(v,i){ list.appendChild(makeVCard(v,i+1,true)); });
+}
+
+// ═══════════════════════════════════════════════
+// CARD REUTILIZABLE
+// ═══════════════════════════════════════════════
+function makeVCard(v, num, isFavList){
+  var d = document.createElement('div');
+  d.className = 'vcard';
+  var fav = esFav(v);
+  d.innerHTML =
+    '<div class="vchead">'+
+      '<div class="vcnum">'+num+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div class="vcname">'+v.r+'</div>'+
+        '<div class="vcref2">'+vT(v).substring(0,45)+'...</div>'+
+      '</div>'+
+      '<button class="vcfavbtn">'+(fav?'★':'☆')+'</button>'+
+      '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'+
+    '</div>'+
+    '<div class="vcbody">'+
+      '<p class="vcverse">'+vT(v)+'</p>'+
+      '<div class="vcplabel">'+L('plabel')+'</div>'+
+      '<p class="vcptext">'+vP(v)+'</p>'+
+    '</div>';
+
+  // Expand/collapse
+  d.querySelector('.vchead').addEventListener('click', function(e){
+    if(e.target.classList.contains('vcfavbtn')) return;
+    var open = d.classList.contains('open');
+    document.querySelectorAll('.vcard').forEach(function(c){c.classList.remove('open');});
+    if(!open) d.classList.add('open');
+  });
+
+  // Toggle fav desde lista
+  d.querySelector('.vcfavbtn').addEventListener('click', function(){
+    if(esFav(v)){
+      FAVS = FAVS.filter(function(f){return f.t!==v.t;});
+      toast(L('fav_off'));
+    } else {
+      FAVS.push({t:v.t,r:v.r,p:v.p,t_en:v.t_en||'',p_en:v.p_en||'',t_pt:v.t_pt||'',p_pt:v.p_pt||'',t_fr:v.t_fr||'',p_fr:v.p_fr||''});
+      toast(L('fav_on'));
+    }
+    lsSetJ('pd_favs', FAVS);
+    this.textContent = esFav(v)?'★':'☆';
+    mostrar();
+    if(isFavList) renderFavs();
+  });
+  return d;
+}
+
+// ═══════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════
+function ir(p){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
   document.getElementById('s-'+p).classList.add('active');
   var ni = document.getElementById('n-'+p);
   if(ni) ni.classList.add('on');
   if(p==='image') setTimeout(dibujar,80);
-  if(p==='history') hacerHist();
+  if(p==='history') renderHist();
+  if(p==='favs') renderFavs();
   window.scrollTo(0,0);
 }
 
-function hacerBG() {
-  var g = document.getElementById('bgGrid');
+// ═══════════════════════════════════════════════
+// IMAGEN
+// ═══════════════════════════════════════════════
+function hacerBG(){
+  var g=document.getElementById('bgGrid');
+  if(g.children.length>0) return; // ya construido
   BG.forEach(function(b,i){
-    var s = document.createElement('div');
-    s.className = 'bgsw'+(i===0?' on':'');
-    s.style.background = 'linear-gradient(135deg,'+b.c[0]+','+b.c[2]+')';
-    s.onclick = function(){
-      document.querySelectorAll('.bgsw').forEach(function(x){x.classList.remove('on')});
+    var s=document.createElement('div');
+    s.className='bgsw'+(i===0?' on':'');
+    s.style.background='linear-gradient(135deg,'+b.c[0]+','+b.c[2]+')';
+    s.onclick=function(){
+      document.querySelectorAll('.bgsw').forEach(function(x){x.classList.remove('on');});
       s.classList.add('on'); cbg=i; dibujar();
     };
     g.appendChild(s);
   });
 }
 
-function hacerFonts() {
-  var r = document.getElementById('fontRow');
+function hacerFonts(){
+  var r=document.getElementById('fontRow');
+  if(r.children.length>0) return;
   FN.forEach(function(f,i){
-    var c = document.createElement('div');
-    c.className = 'fchip'+(i===0?' on':'');
-    c.textContent = f.l;
-    c.style.fontFamily = f.n;
-    c.onclick = function(){
-      document.querySelectorAll('.fchip').forEach(function(x){x.classList.remove('on')});
+    var c=document.createElement('div');
+    c.className='fchip'+(i===0?' on':'');
+    c.textContent=f.l; c.style.fontFamily=f.n;
+    c.onclick=function(){
+      document.querySelectorAll('.fchip').forEach(function(x){x.classList.remove('on');});
       c.classList.add('on'); cfn=i; dibujar();
     };
     r.appendChild(c);
   });
 }
 
-function sz(d) {
-  fsz = Math.max(10,Math.min(28,fsz+d));
-  document.getElementById('szv').textContent = fsz;
-  dibujar();
-}
+function sz(d){ fsz=Math.max(10,Math.min(28,fsz+d)); document.getElementById('szv').textContent=fsz; dibujar(); }
 
-function dibujar() {
-  var c = document.getElementById('imgCanvas');
-  var x = c.getContext('2d');
-  var W=c.width, H=c.height;
-  var b = BG[cbg], v = VV[cv];
-  var g = x.createLinearGradient(0,0,W,H);
+function dibujar(){
+  var c=document.getElementById('imgCanvas'), x=c.getContext('2d');
+  var W=c.width,H=c.height,b=BG[cbg],v=VV[cv]||{t:'',r:''};
+  var g=x.createLinearGradient(0,0,W,H);
   g.addColorStop(0,b.c[0]); g.addColorStop(0.5,b.c[1]); g.addColorStop(1,b.c[2]);
   x.fillStyle=g; x.fillRect(0,0,W,H);
-  x.strokeStyle='rgba(240,192,96,0.3)'; x.lineWidth=1; x.strokeRect(12,12,W-24,H-24);
-  x.fillStyle='rgba(240,192,96,0.9)'; x.font='bold 10px Arial'; x.fillText('✦ PALABRA DIARIA',24,32);
-  x.fillStyle='rgba(240,237,248,0.92)'; x.font='italic '+fsz+'px '+FN[cfn].n;
-  var raw=v.t.replace(/^"|"$/g,''), words=raw.split(' '), line='', lines=[], mw=W-48;
+  x.strokeStyle='rgba(200,160,255,0.25)'; x.lineWidth=1; x.strokeRect(12,12,W-24,H-24);
+  x.fillStyle='rgba(200,160,255,0.85)'; x.font='bold 10px Arial';
+  x.fillText('✦ PALABRA DIARIA',24,32);
+  x.fillStyle='rgba(240,237,248,0.93)'; x.font='italic '+fsz+'px '+FN[cfn].n;
+  var raw=vT(v).replace(/^"|"$/g,''), words=raw.split(' '), line='', lines=[], mw=W-48;
   for(var i=0;i<words.length;i++){
     var test=line+(line?' ':'')+words[i];
     if(x.measureText(test).width>mw&&line){lines.push(line);line=words[i];}else line=test;
   }
-  if(line)lines.push(line);
-  var lh=fsz+6, tot=lines.length*lh, sy=(H-tot)/2;
+  if(line) lines.push(line);
+  var lh=fsz+6,tot=lines.length*lh,sy=(H-tot)/2;
   for(var j=0;j<lines.length;j++) x.fillText(lines[j],24,sy+j*lh);
-  x.fillStyle='rgba(168,159,200,0.85)'; x.font=Math.max(9,fsz-4)+'px Arial'; x.fillText(v.r,24,H-14);
+  x.fillStyle='rgba(168,159,200,0.85)'; x.font=Math.max(9,fsz-4)+'px Arial';
+  x.fillText(v.r,24,H-14);
 }
 
-function dlImg() {
-  var c=document.getElementById('imgCanvas'), a=document.createElement('a');
+function dlImg(){
+  var c=document.getElementById('imgCanvas'),a=document.createElement('a');
   a.download='palabra-diaria.png'; a.href=c.toDataURL('image/png'); a.click();
-  toast('Imagen guardada ✓');
+  toast(L('saved'));
 }
 
-function shImg() {
+function shImg(){
   var c=document.getElementById('imgCanvas');
   if(navigator.share){
     c.toBlob(function(b){
       var f=new File([b],'palabra-diaria.png',{type:'image/png'});
       if(navigator.canShare&&navigator.canShare({files:[f]})){
-        navigator.share({files:[f],title:'Palabra Diaria',text:VV[cv].t});
+        navigator.share({files:[f],title:'Palabra Diaria',text:vT(VV[cv])});
       } else dlImg();
     });
   } else dlImg();
 }
 
-function hacerHist() {
-  var l=document.getElementById('hlist'); l.innerHTML='';
-  var s=Math.max(0,cv-6);
-  document.getElementById('hsub').textContent='Últimos '+(cv-s+1)+' días';
-  for(var i=s;i<=cv;i++){
-    var v=VV[i], d=document.createElement('div');
-    d.className='dcard';
-    d.innerHTML='<div class="drow"><div class="dnum">'+(i+1)+'</div><div style="flex:1"><div class="dname">Día '+(i+1)+'</div><div class="dref">'+v.r+'</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="dbody"><p class="dverse">'+v.t+'</p><div class="dplabel">Promesa</div><p class="dppromise">'+v.p+'</p></div>';
-    d.onclick=(function(el){return function(){
-      var o=el.classList.contains('open');
-      document.querySelectorAll('.dcard').forEach(function(c){c.classList.remove('open')});
-      if(!o)el.classList.add('open');
-    };})(d);
-    l.appendChild(d);
-  }
+// ═══════════════════════════════════════════════
+// IDIOMA
+// ═══════════════════════════════════════════════
+var LANGS = [{c:'es',n:'Español'},{c:'en',n:'English'},{c:'pt',n:'Português'},{c:'fr',n:'Français'}];
+
+function hacerLangs(){
+  var r=document.getElementById('langRow');
+  r.innerHTML='';
+  LANGS.forEach(function(l){
+    var c=document.createElement('div');
+    c.className='langchip'+(l.c===lang?' on':'');
+    c.textContent=l.n;
+    c.onclick=function(){
+      lang=l.c;
+      lsSet('pd_lang',lang);
+      document.querySelectorAll('.langchip').forEach(function(x){x.classList.remove('on');});
+      c.classList.add('on');
+      actualizarUI();
+      mostrar();
+    };
+    r.appendChild(c);
+  });
 }
 
-function buscar() {
-  var q=document.getElementById('sinput').value.toLowerCase().trim();
-  if(q.length<2){document.getElementById('sres').innerHTML='';return;}
-  btema(q);
-}
-
-function btema(t) {
-  document.getElementById('sinput').value=t;
-  var res=VV.filter(function(v){
-    return v.tp.some(function(x){return x.includes(t);})||v.t.toLowerCase().includes(t)||v.p.toLowerCase().includes(t);
-  }).slice(0,20);
-  var c=document.getElementById('sres');
-  if(!res.length){c.innerHTML='<p style="color:#6b6285;text-align:center;padding:24px;font-size:14px">No encontré versículos sobre ese tema.</p>';return;}
-  c.innerHTML=res.map(function(v){return'<div class="rcard"><p class="rverse">'+v.t+'</p><p class="rref">'+v.r+'</p></div>';}).join('');
-}
-
-function cambiarTema() {
+// ═══════════════════════════════════════════════
+// TEMA
+// ═══════════════════════════════════════════════
+function cambiarTema(){
   dark=!dark;
+  lsSet('pd_dark',dark?'1':'0');
   document.body.className=dark?'':'light';
   document.getElementById('tog').className='tog'+(dark?' on':'');
-  document.getElementById('tval').textContent=dark?'Activado':'Desactivado';
+  document.getElementById('tval').textContent=dark?L('on'):L('off');
 }
 
-function toast(m) {
-  var t=document.getElementById('toast');
-  t.textContent=m; t.classList.add('on');
-  setTimeout(function(){t.classList.remove('on');},2200);
+// ═══════════════════════════════════════════════
+// ACTUALIZAR TEXTOS UI (idioma)
+// ═══════════════════════════════════════════════
+function actualizarUI(){
+  var ids={
+    'badge-txt':    'badge',
+    'plabel-txt':   'plabel',
+    'lbl-fav':      'fav',
+    'lbl-sig':      'sig',
+    'lbl-img':      'img',
+    'lbl-img-title':'img_title',
+    'lbl-bg':       'bg',
+    'lbl-font':     'font',
+    'lbl-size':     'size',
+    'lbl-dl':       'dl',
+    'lbl-sh':       'sh',
+    'lbl-hist':     'hist',
+    'lbl-favs':     'favs',
+    'lbl-settings': 'settings',
+    'lbl-apar':     'apar',
+    'lbl-dark':     'dark_lbl',
+    'tval':         dark?'on':'off',
+    'lbl-idioma':   'idioma',
+    'lbl-info':     'info',
+    'lbl-vcount-name':'vcount',
+    'lbl-dev':      'dev',
+    'lbl-devrole':  'dev_role',
+    'nl-home':      'inicio',
+    'nl-hist':      'hist',
+    'nl-favs':      'favs',
+    'nl-img':       'img',
+    'nl-set':       'settings'
+  };
+  for(var id in ids){
+    var el=document.getElementById(id);
+    if(el) el.textContent = (ids[id]==='on'||ids[id]==='off') ? L(ids[id]) : L(ids[id]);
+  }
+  // tval especial
+  var tv=document.getElementById('tval');
+  if(tv) tv.textContent=dark?L('on'):L('off');
 }
 
-window.onload = setup;
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+function toast(m){
+  var el=document.getElementById('toast');
+  el.textContent=m; el.classList.add('on');
+  setTimeout(function(){el.classList.remove('on');},2200);
+}
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
 </script>
 </body>
 </html>
