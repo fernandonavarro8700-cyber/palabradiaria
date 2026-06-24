@@ -3,6 +3,7 @@
   "short_name": "Palabra Diaria",
   "description": "Versículo bíblico con promesa cada día",
   "start_url": "/",
+  "id": "com.palabradiaria.app",
   "display": "standalone",
   "background_color": "#0e0b1f",
   "theme_color": "#6c48b0",
